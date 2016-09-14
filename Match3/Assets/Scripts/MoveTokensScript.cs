@@ -7,52 +7,52 @@ public class MoveTokensScript : MonoBehaviour
     protected GameManagerScript gameManager; // A reference to the GameManagerScript component on this script's gameObject.
     protected MatchManagerScript matchManager; // A reference to the MatchManagerScript component on this script's gameObject.
 
-    public bool move = false; //Determines whether or not the selected icons can move.
+    public bool move = false; //Determines whether or not the selected tokens are moving.
 
-    public float lerpPercent; //Used to track how much the icons have moved from their original positions, as a percentage between 0f and 1f.
+    public float lerpPercent; //Used to track how much the tokens have moved from their original positions, as a percentage between 0f and 1f.
     public float lerpSpeed; //How quickly the lerp percentage is increased.
 
-    bool userSwap; //
+    bool userSwap; //Have the user tokens been swapped or not??
 
-    protected GameObject exchangeToken1;
-    GameObject exchangeToken2;
+    protected GameObject exchangeToken1; //A reference to the GameObject token that the user clicked first.
+    GameObject exchangeToken2; //A reference to the GameObject token that the user clicked second.
 
-    Vector2 exchangeGridPos1;
-    Vector2 exchangeGridPos2;
+    Vector2 exchangeGridPos1; //The position of exchangeToken1 in the scene.
+    Vector2 exchangeGridPos2; //The position of exchangeToken2 in the scene.
 
     public virtual void Start()
     {
-        gameManager = GetComponent<GameManagerScript>();
-        matchManager = GetComponent<MatchManagerScript>();
-        lerpPercent = 0;
+        gameManager = GetComponent<GameManagerScript>(); //Set the gameManager variable to the GameManagerScript component on the GameObject.
+        matchManager = GetComponent<MatchManagerScript>(); //Set the matchManager variable to the MatchManagerScript component on the GameObject.
+        lerpPercent = 0; //Reset the lerp percentage to 0 so that tokens don't move until the right time.
     }
 
     public virtual void Update()
     {
 
-        if (move)
+        if (move) //If the tokens are moving:
         {
-            lerpPercent += lerpSpeed;
+            lerpPercent += lerpSpeed; //...make lerpPercent = lerpPercent + lerpSpeed.
 
-            if (lerpPercent >= 1)
+            if (lerpPercent >= 1) //If the lerpPercentage exceeds 1f:
             {
-                lerpPercent = 1;
+                lerpPercent = 1; //...force it back to 1f.
             }
 
-            if (exchangeToken1 != null)
+            if (exchangeToken1 != null) //If exchangeToken1 is a valid GameObject:
             {
-                ExchangeTokens();
+                ExchangeTokens(); //...run the ExchangeTokens function.
             }
         }
     }
 
     /// <summary>
-    /// This function resets the lerp percentage before setting up the icons through SetupTokenExchange.
+    /// This function resets the lerp percentage before setting up the tokens through SetupTokenExchange.
     /// </summary>
     public void SetupTokenMove()
     {
-        move = true;
-        lerpPercent = 0;
+        move = true; //The tokens are now moving.
+        lerpPercent = 0; //Reset the lerp percentage to 0 so that tokens don't move until the right time.
     }
 
     /// <summary>
@@ -62,25 +62,34 @@ public class MoveTokensScript : MonoBehaviour
     /// <param name="pos1">The location of token1 in the game scene.</param>
     /// <param name="token2">The second token you clicked on.</param>
     /// <param name="pos2">The location of token2 in the game scene.</param>
-    /// <param name="reversable">Can this exchange be reversed? (Useful if the icons don't match for a match 3.)</param>
+    /// <param name="reversable">Can this exchange be reversed? (Useful if the tokens don't match for a match 3.)</param>
 	public void SetupTokenExchange(GameObject token1, Vector2 pos1,
                                    GameObject token2, Vector2 pos2, bool reversable)
     {
-        SetupTokenMove();
+        SetupTokenMove(); //Run SetupTokenMove so that the tokens will start moving.
 
-        exchangeToken1 = token1;
-        exchangeToken2 = token2;
+        exchangeToken1 = token1; //Set exchangeToken1 to the first token you clicked on.
+        exchangeToken2 = token2; //Set exchangeToken2 to the second token you clicked on.
 
-        exchangeGridPos1 = pos1;
-        exchangeGridPos2 = pos2;
+        exchangeGridPos1 = pos1; //Set exchangeGridPos1 to the position of the first token you clicked on.
+        exchangeGridPos2 = pos2; //Set exchangeGridPos2 to the position of the second token you clicked on.
 
 
-        this.userSwap = reversable;
+        this.userSwap = reversable; //Let the game know that the tokens have been swapped.
     }
 
+    /// <summary>
+    /// Exchange the two tokens that have been selected.
+    /// </summary>
     public virtual void ExchangeTokens()
     {
+        /*
+        The next two lines set references to the locations we're using to swap.
+        startPos is set to the position of wherever token1 is, WITHIN the game's grid position.
+        endPos is set to the position of wherever token2 is, WITHIN the game's grid position.
 
+        The positions are converted into grid positions by gameManager.GetWorldPositionFromGridPosition.
+        */
         Vector3 startPos = gameManager.GetWorldPositionFromGridPosition((int)exchangeGridPos1.x, (int)exchangeGridPos1.y);
         Vector3 endPos = gameManager.GetWorldPositionFromGridPosition((int)exchangeGridPos2.x, (int)exchangeGridPos2.y);
 
