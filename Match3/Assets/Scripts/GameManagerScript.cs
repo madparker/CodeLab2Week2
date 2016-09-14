@@ -124,7 +124,7 @@ public class GameManagerScript : MonoBehaviour {
 
 	/// <summary>
 	/// This creates a random token and puts it into the grid at the given coordinate
-	/// (It also makes the token a child of the grid, to keep the hierarchy tidy.) 
+	/// (It also makes the token a child of the grid, to keep the hierarchy tidy.)
 	/// </summary>
 	/// 
 	/// <param name="x">An int x that is the x coordinate in the grid</param>

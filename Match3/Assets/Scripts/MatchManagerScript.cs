@@ -95,6 +95,9 @@ public class MatchManagerScript : MonoBehaviour {
 		return matchLength;
 	}
 
+
+	//TODO:Make a Vertical line manager?
+
 	/// <summary>
 	/// Destroys all tokens in a match of three or more
 	/// </summary>
