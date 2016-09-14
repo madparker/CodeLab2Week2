@@ -46,11 +46,12 @@ public class GameManagerScript : MonoBehaviour {
 			}
 
 		} else {
-			//if the grid has empty spots, 
 			if(!moveTokenManager.move){
+				//if the icons are currently moving, set them up to move
 				moveTokenManager.SetupTokenMove();
 			}
 			if(!moveTokenManager.MoveTokensToFillEmptySpaces()){
+				
 				repopulateManager.AddNewTokensToRepopulateGrid();
 			}
 		}
@@ -87,7 +88,12 @@ public class GameManagerScript : MonoBehaviour {
 		return false;
 	}
 
-
+	/// <summary>
+	/// Gets the position of a specific token
+	/// </summary>
+	/// 
+	/// <param name="token">A token GameObject, 'cause Matt likes sports</param>
+	/// <returns>The Vector2 coordinate of a token in the grid</returns>
 	public Vector2 GetPositionOfTokenInGrid(GameObject token){
 		for(int x = 0; x < gridWidth; x++){
 			for(int y = 0; y < gridHeight ; y++){
@@ -99,6 +105,14 @@ public class GameManagerScript : MonoBehaviour {
 		return new Vector2();
 	}
 		
+
+	/// <summary>
+	/// Converts a grid position into a Worldspace Position
+	/// </summary>
+	/// 
+	/// <param name="x">An int x that is the x coordinate in the grid</param>
+	/// <param name="y">An int y that is the y coordinate in the grid</param>
+	/// <returns>A Vector2 coordinate in Worldspace</returns>
 	public Vector2 GetWorldPositionFromGridPosition(int x, int y){
 		return new Vector2(
 			(x - gridWidth/2) * tokenSize,
