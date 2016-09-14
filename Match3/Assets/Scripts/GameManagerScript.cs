@@ -15,6 +15,7 @@ public class GameManagerScript : MonoBehaviour {
 	public GameObject grid;
 
 	//we're declaring a MULTI-DIMENSIONAL ARRAY; this array has two dimensions, so it's a GRID, not a line
+	//that will make it easy to track tokens in a grid (which is a two-dimensional shape)
 	public GameObject[,] gridArray;
 
 	protected Object[] tokenTypes;
@@ -63,10 +64,10 @@ public class GameManagerScript : MonoBehaviour {
 	/// It looks like this should only be called once a game.
 	/// </summary>
 	void MakeGrid() {
-		//creates a GameObject called TokenGrid, then makes all of the tokens children of it
-		//this will keep our hierarchy neat
+		//creates a GameObject called TokenGrid, then makes all of the tokens as children of it
+		//this keeps our hierarchy neat
 		grid = new GameObject("TokenGrid");
-		//check every token in the grid we made in Start
+		//then, fill the grid with tokens
 		for(int x = 0; x < gridWidth; x++){
 			for(int y = 0; y < gridHeight; y++){
 				AddTokenToPosInGrid(x, y, grid);
@@ -122,7 +123,7 @@ public class GameManagerScript : MonoBehaviour {
 
 
 	/// <summary>
-	/// This creates a random token and puts it into the grid
+	/// This creates a random token and puts it into the grid at the given coordinate
 	/// (It also makes the token a child of the grid, to keep the hierarchy tidy.) 
 	/// </summary>
 	/// 

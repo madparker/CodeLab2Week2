@@ -20,6 +20,7 @@ public class InputManagerScript : MonoBehaviour {
 		if(Input.GetMouseButtonDown(0)){
 			//when you click, check where on the screen you're clicking
 			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+			//use a 2D raycast to see what you're clicking on
 			Collider2D collider = Physics2D.OverlapPoint(mousePos);
 
 			//if you click on something...
