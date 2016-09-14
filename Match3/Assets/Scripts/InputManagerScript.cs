@@ -23,13 +23,14 @@ public class InputManagerScript : MonoBehaviour {
 			//use a 2D raycast to see what you're clicking on
 			Collider2D collider = Physics2D.OverlapPoint(mousePos);
 
-			//if you click on something...
 			if(collider != null){
-				//if we haven't yet selected a token, we select this one and remember it
+				//if you click on something...
 				if(selected == null){
+					//if we haven't yet selected a token, select this token and remember it
 					selected = collider.gameObject;				
 				} else {
-					//if we HAVE already selected a token, we calculate the distance between this token and our selected token
+					//if we HAVE already selected a token, calculate the distance between this token (which we're currently clicking on)
+					//and that one (which we clicked on last time)
 					Vector2 pos1 = gameManager.GetPositionOfTokenInGrid(selected);
 					Vector2 pos2 = gameManager.GetPositionOfTokenInGrid(collider.gameObject);
 
