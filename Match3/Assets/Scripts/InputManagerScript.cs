@@ -3,8 +3,12 @@ using System.Collections;
 
 public class InputManagerScript : MonoBehaviour {
 
+	//this script tracks player inputs and makes changes to the game
+
 	protected GameManagerScript gameManager;
 	protected MoveTokensScript moveManager;
+
+	//selected is a variable which tracks which token (if any) we've currently selected
 	protected GameObject selected = null;
 
 	public virtual void Start () {
@@ -14,20 +18,25 @@ public class InputManagerScript : MonoBehaviour {
 		
 	public virtual void SelectToken(){
 		if(Input.GetMouseButtonDown(0)){
+			//when you click, check where on the screen you're clicking
 			Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-			
 			Collider2D collider = Physics2D.OverlapPoint(mousePos);
 
+			//if you click on something...
 			if(collider != null){
+				//if we haven't yet selected a token, we select this one and remember it
 				if(selected == null){
-					selected = collider.gameObject;
+					selected = collider.gameObject;				
 				} else {
+					//if we HAVE already selected a token, we calculate the distance between this token and our selected token
 					Vector2 pos1 = gameManager.GetPositionOfTokenInGrid(selected);
 					Vector2 pos2 = gameManager.GetPositionOfTokenInGrid(collider.gameObject);
 
+					//if they're next to each other, we swap them
 					if(Mathf.Abs((pos1.x - pos2.x) + (pos1.y - pos2.y)) == 1){
 						moveManager.SetupTokenExchange(selected, pos1, collider.gameObject, pos2, true);
 					}
+					//then deselect our current token (because we're about to destroy or forget it)
 					selected = null;
 				}
 			}
