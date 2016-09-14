@@ -47,11 +47,12 @@ public class GameManagerScript : MonoBehaviour {
 
 		} else {
 			if(!moveTokenManager.move){
-				//if the icons are currently moving, set them up to move
+				//if the icons are currently moving, set them up to move and leave it be
 				moveTokenManager.SetupTokenMove();
 			}
 			if(!moveTokenManager.MoveTokensToFillEmptySpaces()){
-				
+				//if the MoveTokenManager hasn't added any tokens to the grid
+				//tell Repopulate Script to add new tokens
 				repopulateManager.AddNewTokensToRepopulateGrid();
 			}
 		}
