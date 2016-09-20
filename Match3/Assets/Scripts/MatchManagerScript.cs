@@ -26,7 +26,14 @@ public class MatchManagerScript : MonoBehaviour {
 													//a space that doesn't exist
 					match = match || GridHasHorizontalMatch(x, y); //if match was ever set to true, it stays true forever
 				}
-			}
+
+                else if (y < gameManager.gridHeight - 2)
+                {   //GridHasHorizontalMatch checks 2 to the right
+                    //gameManager.gridWidth - 2 ensures you're never extending into
+                    //a space that doesn't exist
+                    match = match || GridHasVerticalMatch(x, y); //if match was ever set to true, it stays true forever
+                }
+            }
 		}
 
 		return match;
@@ -57,13 +64,41 @@ public class MatchManagerScript : MonoBehaviour {
 		}
 	}
 
-	/// <summary>
-	/// Determine how far to the right a match extends.
+    /// <summary>
+	/// Check if there is a vertical match, based on the bottommost token.
 	/// </summary>
-	/// <returns>The horizontal match length.</returns>
-	/// <param name="x">The x coordinate of the leftmost gameobject in the match.</param>
-	/// <param name="y">The y coordinate of the leftmost gameobject in the match.</param>
-	public int GetHorizontalMatchLength(int x, int y){
+	/// <returns><c>true</c> there is a horizontal match originating at these coordinates, 
+	/// <c>false</c> otherwise.</returns>
+	/// <param name="x">The x coordinate of the token to check.</param>
+	/// <param name="y">The y coordinate of the token to check.</param>
+	public bool GridHasVerticalMatch(int x, int y)
+    {
+        //check the token at given coordinates, the token above it, and the token 2 above it
+        GameObject token1 = gameManager.gridArray[x, y + 0];
+        GameObject token2 = gameManager.gridArray[x, y + 1];
+        GameObject token3 = gameManager.gridArray[x, y + 2];
+
+        if (token1 != null && token2 != null && token3 != null)
+        { //ensure all of the token exists
+            SpriteRenderer sr1 = token1.GetComponent<SpriteRenderer>();
+            SpriteRenderer sr2 = token2.GetComponent<SpriteRenderer>();
+            SpriteRenderer sr3 = token3.GetComponent<SpriteRenderer>();
+
+            return (sr1.sprite == sr2.sprite && sr2.sprite == sr3.sprite);  //compare their sprites
+                                                                            //to see if they're the same
+        }
+        else {
+            return false;
+        }
+    }
+    
+    /// <summary>
+    /// Determine how far to the right a match extends.
+    /// </summary>
+    /// <returns>The horizontal match length.</returns>
+    /// <param name="x">The x coordinate of the leftmost gameobject in the match.</param>
+    /// <param name="y">The y coordinate of the leftmost gameobject in the match.</param>
+    public int GetHorizontalMatchLength(int x, int y){
 		int matchLength = 1;
 		
 		GameObject first = gameManager.gridArray[x, y]; //get the gameobject at the provided coordinates
@@ -95,14 +130,50 @@ public class MatchManagerScript : MonoBehaviour {
 		return matchLength;
 	}
 
+    public int GetVerticalMatchLength(int x, int y)
+    {
+        int matchLength = 1;
 
-	//TODO:Make a Vertical line manager?
+        GameObject first = gameManager.gridArray[x, y]; //get the gameobject at the provided coordinates
 
-	/// <summary>
-	/// Destroys all tokens in a match of three or more
-	/// </summary>
-	/// <returns>The number of tokens destroyed.</returns>
-	public virtual int RemoveMatches(){
+        //make sure the script found a gameobject, and--if so--get its sprite
+        if (first != null)
+        {
+            SpriteRenderer sr1 = first.GetComponent<SpriteRenderer>();
+
+            //compare the gameobject's sprite to the sprite one above, two above, etc.
+            //each time the script finds a match, increment matchLength
+            //stop when it's not a match, or if the matches extend to the edge of the play area
+            for (int i = y + 1; i < gameManager.gridHeight; i++)
+            {
+                GameObject other = gameManager.gridArray[x, i];
+
+                if (other != null)
+                {
+                    SpriteRenderer sr2 = other.GetComponent<SpriteRenderer>();
+
+                    if (sr1.sprite == sr2.sprite)
+                    {
+                        matchLength++;
+                    }
+                    else {
+                        break;
+                    }
+                }
+                else {
+                    break;
+                }
+            }
+        }
+
+        return matchLength;
+    }
+
+    /// <summary>
+    /// Destroys all tokens in a match of three or more
+    /// </summary>
+    /// <returns>The number of tokens destroyed.</returns>
+    public virtual int RemoveMatches(){
 		int numRemoved = 0;
 
 		//iterate across entire grid, looking for matches
@@ -124,7 +195,26 @@ public class MatchManagerScript : MonoBehaviour {
 						}
 					}
 				}
-			}
+
+                else if (y < gameManager.gridHeight - 2)
+                {
+
+                    int vertMatchLength = GetVerticalMatchLength(x, y);
+
+                    if (vertMatchLength > 2)
+                    {
+
+                        for (int i = y; i < y + vertMatchLength; i++)
+                        {
+                            GameObject token = gameManager.gridArray[x, i];
+                            Destroy(token);
+
+                            gameManager.gridArray[x, i] = null;
+                            numRemoved++;
+                        }
+                    }
+                }
+            }
 		}
 		
 		return numRemoved;
