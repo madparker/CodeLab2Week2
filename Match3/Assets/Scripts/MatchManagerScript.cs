@@ -27,7 +27,7 @@ public class MatchManagerScript : MonoBehaviour {
 					match = match || GridHasHorizontalMatch(x, y); //if match was ever set to true, it stays true forever
 				}
 
-                else if (y < gameManager.gridHeight - 2)
+                if (y < gameManager.gridHeight - 2)
                 {   //GridHasHorizontalMatch checks 2 to the right
                     //gameManager.gridWidth - 2 ensures you're never extending into
                     //a space that doesn't exist
@@ -196,7 +196,7 @@ public class MatchManagerScript : MonoBehaviour {
 					}
 				}
 
-                else if (y < gameManager.gridHeight - 2)
+                if (y < gameManager.gridHeight - 2)
                 {
 
                     int vertMatchLength = GetVerticalMatchLength(x, y);
@@ -216,7 +216,8 @@ public class MatchManagerScript : MonoBehaviour {
                 }
             }
 		}
-		
+
+        gameManager.UpdateScore(5);
 		return numRemoved;
 	}
 }

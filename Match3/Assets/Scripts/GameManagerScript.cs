@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using System.Collections;
 
 public class GameManagerScript : MonoBehaviour {
@@ -22,6 +24,9 @@ public class GameManagerScript : MonoBehaviour {
 
 	//TODO: use this variable. It doesn't seem to be used anywhere.
 	GameObject selected;
+
+    int score;
+    public Text scoreText;
 
 	public virtual void Start () {
 		//load the tokens, make the grid, and create references to the other scripts
@@ -57,6 +62,8 @@ public class GameManagerScript : MonoBehaviour {
 				repopulateManager.AddNewTokensToRepopulateGrid();
 			}
 		}
+
+        scoreText.text = "Score: " + score;
 	}
 		
 	/// <summary>
@@ -89,6 +96,11 @@ public class GameManagerScript : MonoBehaviour {
 		//if all spots in the grid are filled, we returned false (and will spawn no tokens)
 		return false;
 	}
+
+    public virtual void UpdateScore(int valueToAdd)
+    {
+        score += valueToAdd;
+    }
 
 	/// <summary>
 	/// Gets the position of a specific token
