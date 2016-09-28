@@ -28,7 +28,10 @@ public class GameManagerScript : MonoBehaviour {
     int score;
     public Text scoreText;
 
+
+
 	public virtual void Start () {
+
 		//load the tokens, make the grid, and create references to the other scripts
 		tokenTypes = (Object[])Resources.LoadAll("Tokens/");
 		gridArray = new GameObject[gridWidth, gridHeight];
@@ -37,7 +40,9 @@ public class GameManagerScript : MonoBehaviour {
 		inputManager = GetComponent<InputManagerScript>();
 		repopulateManager = GetComponent<RepopulateScript>();
 		moveTokenManager = GetComponent<MoveTokensScript>();
-	}
+
+		InvokeRepeating("TenSecReset", 25, 25);
+		}
 
 	public virtual void Update(){
 		//every frame, check whether the grid is full of tokens.
@@ -64,6 +69,8 @@ public class GameManagerScript : MonoBehaviour {
 		}
 
         scoreText.text = "Score: " + score;
+
+
 	}
 		
 	/// <summary>
@@ -152,5 +159,10 @@ public class GameManagerScript : MonoBehaviour {
 		token.transform.parent = parent.transform;
 		//then, we put this token into the array of tokens
 		gridArray[x, y] = token;
+	}
+
+	void TenSecReset (){
+	
+		SceneManager.LoadScene (sceneName: "GameScene");
 	}
 }
